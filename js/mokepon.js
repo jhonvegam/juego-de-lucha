@@ -28,6 +28,18 @@ let vidasEnemigo = 3
 
 ataques = ['Agua', 'Tierra','Fuego']
 
+class Mokepon {
+    constructor(nombre, foto, vida){
+        this.nombre = nombre
+        this.foto = foto
+        this.vida = vida
+    }
+}
+
+let gorila = new Mokepon("Gorila", "./assets/gorila.png", 5)
+let leopardo = new Mokepon("Leopardo", "./assets/leopardo.png", 5)
+let zorro = new Mokepon("Zorro", "./assets/zorro.png", 5)
+
 function iniciarJuego()
 {
     seccionAtaque.style.display = 'none'
