@@ -3,10 +3,18 @@
 . cuando se referencia el elemento por class
 */
 @import url('https://fonts.googleapis.com/css2?family=Pacifico&family=UnifrakturCook:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Pacifico&family=UnifrakturCook:wght@700&display=swap');
 
 body{
+    /* font-family: 'UnifrakturCook', cursive; */
+    /* background-image: url("./assets/fondo.png"); */
+    background-color: #280274;
+    font-family: 'Alfa Slab One';
+    /* font-family: 'Pacifico', cursive;
     font-family: 'UnifrakturCook', cursive;
-    background-color: #1D2B53;
+    font-family: 'Alfa Slab One', serif;
+    font-family: 'Pacifico', cursive;
+    font-family: 'UnifrakturCook', cursive;; */
 }
 
 #seleccionar-mascota{
@@ -35,7 +43,7 @@ body{
 .tarjeta-de-mokepon{
     width: 230px;
     height: 230px;
-    background: #7E2553;
+    background: #3652AD;
     padding: 10px;
     box-sizing: border-box;
     margin: 10px;
@@ -58,17 +66,17 @@ input {
 }
 
 input:checked + label{
-    background-color: #FAEF5D;
+    background-color: #FE7A36;
 }
 
 #boton-mascota{
     width: 230px;
     height: 50px;
     border-radius: 20px;
-    font-family: 'UnifrakturCook', cursive;
+    font-family: 'Alfa Slab One';
     color: white;
-    border: 2px solid #FF004D;
-    background-color: transparent;
+    background-color: #FE7A36;
+    border: 0px
 }
 
 #seleccionar-ataque{
@@ -79,8 +87,8 @@ input:checked + label{
 }
 
 .boton-de-ataque{
-    background-color: transparent;
-    border: 2px solid #FF004D;
+    background-color: #3652AD;
+    border: 0px;
     width: 130px;
     height: 50px;
     border-radius: 20px;
