@@ -120,6 +120,8 @@ input:checked + label{
     display: grid;
     grid-template-columns: 100px 100px;
     text-align: center;
+    font-family: 'Alfa Slab One';
+    color: white
 }
 
 @media(max-width: 380px){
