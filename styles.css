@@ -124,6 +124,16 @@ input:checked + label{
     color: white
 }
 
+#ver-mapa{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#mapa{
+    border: 2px solid white
+}
+
 @media(max-width: 380px){
     .tarjetas, .tarjetas-ataques{
         flex-direction: column;

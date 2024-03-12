@@ -19,6 +19,9 @@ const contenedorTarjetas = document.getElementById('contenedor-tarjetas')
 
 const contenedorAtaques = document.getElementById('contenedor-ataques')
 
+const sectionVerMapa = document.getElementById('ver-mapa')
+const mapa = document.getElementById('mapa')
+
 
 let inputGorila 
 let inputLeopardo 
@@ -44,8 +47,8 @@ let ataquesMokeponEnemigo
 let indexAtaqueJugador
 let indexAtaqueEnemigo
 
-let victoriasJugador = 0
-let victoriasEnemigo = 0
+let lienzo = mapa.getContext("2d")
+let intervalo 
 
 class Mokepon {
     constructor(nombre, foto, vida){
@@ -53,6 +56,17 @@ class Mokepon {
         this.foto = foto
         this.vida = vida
         this.ataques = []
+
+        this.x = 20
+        this.y = 20
+        this.ancho = 100
+        this.alto = 170
+
+        this.mapaFoto = new Image()
+        this.mapaFoto.src = foto
+
+        this.velocidadX = 0
+        this.velocidadY = 0
     }
 }
 
@@ -91,6 +105,7 @@ mokepones.push(gorila, leopardo, zorro)
 function iniciarJuego()
 {
     seccionAtaque.style.display = 'none'
+    sectionVerMapa.style.display = 'none'
 
     mokepones.forEach((mokepon) => {
         opcionDeMokepones = `
@@ -121,7 +136,11 @@ function iniciarJuego()
 function seleccionarMascota()
 {
     seccionSeleccionMascota.style.display = 'none'
-    seccionAtaque.style.display = 'flex'
+    //seccionAtaque.style.display = 'flex'
+    sectionVerMapa.style.display = 'flex'
+
+    iniciarMapa()
+
 
     if(inputGorila.checked)
     {
@@ -300,6 +319,77 @@ function aleatorio(min, max)
 {
     return Math.floor(Math.random()*(max-min+1)) + min;
 }
+
+function pintarPersonaje()
+{
+    gorila.x = gorila.x + gorila.velocidadX
+    gorila.y = gorila.y + gorila.velocidadY
+
+    lienzo.clearRect(0,0,mapa.width, mapa.height)
+    lienzo.drawImage(gorila.mapaFoto,gorila.x,gorila.y,gorila.ancho,gorila.alto)
+}
+
+function moverDerecha()
+{
+    gorila.velocidadX = 5
+}
+
+function moverIzquierda()
+{
+    gorila.velocidadX = -5
+
+}
+
+function moverAbajo()
+{
+    gorila.velocidadY = 5
+
+}
+
+function moverArriba()
+{
+    gorila.velocidadY = -5
+}
+
+function detenerMovimiento(){
+    gorila.velocidadX = 0
+    gorila.velocidadY = 0
+}
+
+function sePresionoUnaTecla(event)
+{
+    switch(event.key){
+        case 'ArrowUp':
+            moverArriba()
+            break
+        
+        case 'ArrowDown':
+            moverAbajo()
+            break
+        
+        case 'ArrowLeft':
+            moverIzquierda()
+            break
+
+        case 'ArrowRight':
+            moverDerecha()
+            break
+        
+        default:
+            break
+    }
+}
+
+function iniciarMapa()
+{ 
+    intervalo = setInterval(pintarPersonaje, 50)
+
+    window.addEventListener('keydown', sePresionoUnaTecla)
+
+    window.addEventListener('keyup', detenerMovimiento)
+}
+
+
 
 //Acción que escucha cuando el evento de carga total de la pagina se completó
 window.addEventListener('load', iniciarJuego)
