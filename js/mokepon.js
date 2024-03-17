@@ -38,6 +38,7 @@ let vidasJugador = 3
 let vidasEnemigo = 3
 
 let mascotaJugador
+let mascotaJugadorObjeto
 let opcionDeMokepones
 
 let botones = []
@@ -50,31 +51,50 @@ let indexAtaqueEnemigo
 let lienzo = mapa.getContext("2d")
 let intervalo 
 
+let mapaBackground = new Image()
+mapaBackground.src = './assets/mokemap.png'
+
 class Mokepon {
-    constructor(nombre, foto, vida){
+    constructor(nombre, foto, vida, fotoMapa, x=10, y=10){
         this.nombre = nombre
         this.foto = foto
         this.vida = vida
         this.ataques = []
 
-        this.x = 20
-        this.y = 20
-        this.ancho = 100
-        this.alto = 170
+        this.x = x
+        this.y = y
+        this.ancho = 50
+        this.alto = 70
 
         this.mapaFoto = new Image()
-        this.mapaFoto.src = foto
+        this.mapaFoto.src = fotoMapa
 
         this.velocidadX = 0
         this.velocidadY = 0
     }
+
+    pintarMokepon()
+    {
+        lienzo.drawImage(this.mapaFoto,this.x,this.y,this.ancho,this.alto)
+    }
+
+
 }
 
 let mokepones = []
 
-let gorila = new Mokepon("Gorila", "./assets/gorila.png", 5)
-let leopardo = new Mokepon("Leopardo", "./assets/leopardo.png", 5)
-let zorro = new Mokepon("Zorro", "./assets/zorro.png", 5)
+let gorila = new Mokepon("Gorila", "./assets/gorila.png", 5, './assets/gorila.png')
+let leopardo = new Mokepon("Leopardo", "./assets/leopardo.png", 5, "./assets/leopardo.png")
+let zorro = new Mokepon("Zorro", "./assets/zorro.png", 5, "./assets/zorro.png")
+
+
+let gorilaEnemigo= new Mokepon("Gorila", "./assets/gorila.png", 5, './assets/gorila.png', 80,120)
+let leopardoEnemigo = new Mokepon("Leopardo", "./assets/leopardo.png", 5, "./assets/leopardo.png", 150, 95)
+let zorroEnemigo = new Mokepon("Zorro", "./assets/zorro.png", 5, "./assets/zorro.png", 250, 150)
+
+
+
+
 
 gorila.ataques.push(
     {nombre: "tierra", id: "boton-tierra"},
@@ -99,6 +119,32 @@ zorro.ataques.push(
     {nombre: "agua", id: "boton-agua"},
     {nombre: "tierra", id: "boton-tierra"}
 )
+
+
+gorilaEnemigo.ataques.push(
+    {nombre: "tierra", id: "boton-tierra"},
+    {nombre: "tierra", id: "boton-tierra"},
+    {nombre: "tierra", id: "boton-tierra"},
+    {nombre: "agua", id: "boton-agua"},
+    {nombre: "fuego", id: "boton-fuego"}
+)
+
+leopardoEnemigo.ataques.push(
+    {nombre: "agua", id: "boton-agua"},
+    {nombre: "agua", id: "boton-agua"},
+    {nombre: "agua", id: "boton-agua"},
+    {nombre: "fuego", id: "boton-fuego"},
+    {nombre: "tierra", id: "boton-tierra"}
+)
+
+zorroEnemigo.ataques.push(
+    {nombre: "fuego", id: "boton-fuego"},
+    {nombre: "fuego", id: "boton-fuego"},
+    {nombre: "fuego", id: "boton-fuego"},
+    {nombre: "agua", id: "boton-agua"},
+    {nombre: "tierra", id: "boton-tierra"}
+)
+
 
 mokepones.push(gorila, leopardo, zorro)
 
@@ -139,9 +185,6 @@ function seleccionarMascota()
     //seccionAtaque.style.display = 'flex'
     sectionVerMapa.style.display = 'flex'
 
-    iniciarMapa()
-
-
     if(inputGorila.checked)
     {
         spanMascotaJugador.innerHTML = inputGorila.id
@@ -161,15 +204,14 @@ function seleccionarMascota()
     {
         alert('Debe seleccionar una mascota')
     }
+    iniciarMapa()
 
-    seleccionarMascotaEnemigo()
 }
 
-function seleccionarMascotaEnemigo()
+function seleccionarMascotaEnemigo(enemigo)
 {
-    mascotaAleatoria = mokepones[aleatorio(0,mokepones.length-1)]
-    spanMascotaEnemigo.innerHTML = mascotaAleatoria.nombre
-    ataquesMokeponEnemigo = mascotaAleatoria.ataques
+    spanMascotaEnemigo.innerHTML = enemigo.nombre
+    ataquesMokeponEnemigo = enemigo.ataques
 
     botonesAtaques()
 }
@@ -192,11 +234,11 @@ function botonesAtaques()
     secuenciaAtaque()
 }
 
-function extraerAtaques(nombreMasctota)
+function extraerAtaques(nombreMascota)
 {
     let resAtaque 
     mokepones.forEach(mokepon => {
-        if(mokepon.nombre === nombreMasctota)
+        if(mokepon.nombre === nombreMascota)
         {
             resAtaque = mokepon.ataques
         }
@@ -320,40 +362,61 @@ function aleatorio(min, max)
     return Math.floor(Math.random()*(max-min+1)) + min;
 }
 
-function pintarPersonaje()
+function pintarCanvas()
 {
-    gorila.x = gorila.x + gorila.velocidadX
-    gorila.y = gorila.y + gorila.velocidadY
+    mascotaJugadorObjeto.x = mascotaJugadorObjeto.x + mascotaJugadorObjeto.velocidadX
+    mascotaJugadorObjeto.y = mascotaJugadorObjeto.y + mascotaJugadorObjeto.velocidadY
 
     lienzo.clearRect(0,0,mapa.width, mapa.height)
-    lienzo.drawImage(gorila.mapaFoto,gorila.x,gorila.y,gorila.ancho,gorila.alto)
+
+    lienzo.drawImage(
+        mapaBackground,
+        0,
+        0,
+        mapa.width,
+        mapa.height
+    )
+
+    mascotaJugadorObjeto.pintarMokepon()
+    gorilaEnemigo.pintarMokepon()
+    leopardoEnemigo.pintarMokepon()
+    zorroEnemigo.pintarMokepon()
+
+    if(mascotaJugadorObjeto.velocidadX !== 0 || mascotaJugadorObjeto.y !== 0)
+    {
+        revisarColision(gorilaEnemigo)
+        revisarColision(leopardoEnemigo)
+        revisarColision(zorroEnemigo)
+    }
+
+    
 }
 
 function moverDerecha()
 {
-    gorila.velocidadX = 5
+    mascotaJugadorObjeto.velocidadX = 5
 }
 
 function moverIzquierda()
 {
-    gorila.velocidadX = -5
+    mascotaJugadorObjeto.velocidadX = -5
 
 }
 
 function moverAbajo()
 {
-    gorila.velocidadY = 5
+    mascotaJugadorObjeto.velocidadY = 5
 
 }
 
 function moverArriba()
 {
-    gorila.velocidadY = -5
+    mascotaJugadorObjeto.velocidadY = -5
 }
 
 function detenerMovimiento(){
-    gorila.velocidadX = 0
-    gorila.velocidadY = 0
+    mascotaJugadorObjeto.velocidadX = 0
+    mascotaJugadorObjeto.velocidadY = 0
 }
 
 function sePresionoUnaTecla(event)
@@ -382,13 +445,54 @@ function sePresionoUnaTecla(event)
 
 function iniciarMapa()
 { 
-    intervalo = setInterval(pintarPersonaje, 50)
+    mapa.width = 320
+    mapa.height = 240
+
+    mascotaJugadorObjeto = obtenerObjetoMascota()
+
+    intervalo = setInterval(pintarCanvas, 50)
 
     window.addEventListener('keydown', sePresionoUnaTecla)
 
     window.addEventListener('keyup', detenerMovimiento)
 }
 
+function obtenerObjetoMascota()
+{
+    for (let i = 0; i < mokepones.length; i++) 
+    {
+        if(mokepones[i].nombre === mascotaJugador)
+        {
+            return mokepones[i]
+        }
+    }
+}
+
+function revisarColision(enemigo)
+{
+    const arribaEnemigo = enemigo.y
+    const abajoEnemigo = enemigo.y + enemigo.alto
+    const derechaEnemigo = enemigo.x + enemigo.ancho
+    const izquierdaEnemigo = enemigo.x
+
+    const arribaMascota = mascotaJugadorObjeto.y
+    const abajoMascota = mascotaJugadorObjeto.y + mascotaJugadorObjeto.alto
+    const derechaMascota = mascotaJugadorObjeto.x + mascotaJugadorObjeto.ancho
+    const izquierdaMascota = mascotaJugadorObjeto.x 
+
+    if(abajoMascota < arribaEnemigo || arribaMascota > abajoEnemigo || derechaMascota < izquierdaEnemigo || izquierdaMascota > derechaEnemigo)
+    {
+      return  
+    }
+
+    detenerMovimiento()
+    clearInterval(intervalo)
+    console.log('Se detectó una colisión')
+    seccionAtaque.style.display = 'flex'
+    sectionVerMapa.style.display = 'none'
+    seleccionarMascotaEnemigo(enemigo)
+    // alert("Hay colision" + enemigo.nombre)
+}
 
 
 //Acción que escucha cuando el evento de carga total de la pagina se completó
