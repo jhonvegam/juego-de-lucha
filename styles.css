@@ -112,7 +112,7 @@ input:checked + label{
     border: none;
     background-color: #FAEF5D;
     color: black;
-    font-family: 'UnifrakturCook', cursive;
+    font-family: 'Alfa Slab One';
     border-radius: 4px;
 }
 
@@ -130,15 +130,31 @@ input:checked + label{
     align-items: center;
 }
 
-#mapa{
-    border: 2px solid white
+#ver-mapa button{
+    width: 80px;
+    height: 40px;
+    border-radius: 20px;
+    background: transparent;
+    border: 2px solid white;
+    color: white;
+    font-family: 'Alfa Slab One';
+    margin: 10px 0;
+
 }
 
-@media(max-width: 380px){
+@media(max-width: 580px){
     .tarjetas, .tarjetas-ataques{
         flex-direction: column;
     }
     .tarjeta-de-mokepon{
         flex-direction: column;
     }  
+}
+
+@media(max-width: 300px){
+    #ver-mapa div{
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+    }
 }
