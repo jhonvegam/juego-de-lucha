@@ -43,6 +43,7 @@ let mascotaJugadorObjeto
 let opcionDeMokepones
 
 let botones = []
+let mokeponesEnemigos = []
 
 let ataquesMokeponEnemigo
 
@@ -70,7 +71,8 @@ if(anchoDelMapa > anchoMaximoDelMapa)
 }
 
 class Mokepon {
-    constructor(nombre, foto, vida, fotoMapa){
+    constructor(nombre, foto, vida, fotoMapa, id = null){
+        this.id = id
         this.nombre = nombre
         this.foto = foto
         this.vida = vida
@@ -99,59 +101,33 @@ let gorila = new Mokepon("Gorila", "./assets/gorila.png", 5, './assets/gorila.pn
 let leopardo = new Mokepon("Leopardo", "./assets/leopardo.png", 5, "./assets/leopardo.png")
 let zorro = new Mokepon("Zorro", "./assets/zorro.png", 5, "./assets/zorro.png")
 
-let gorilaEnemigo= new Mokepon("Gorila", "./assets/gorila.png", 5, './assets/gorila.png')
-let leopardoEnemigo = new Mokepon("Leopardo", "./assets/leopardo.png", 5, "./assets/leopardo.png")
-let zorroEnemigo = new Mokepon("Zorro", "./assets/zorro.png", 5, "./assets/zorro.png")
-
-gorila.ataques.push(
+const GORILA_ATAQUES = [
     {nombre: "tierra", id: "boton-tierra"},
     {nombre: "tierra", id: "boton-tierra"},
     {nombre: "tierra", id: "boton-tierra"},
     {nombre: "agua", id: "boton-agua"},
     {nombre: "fuego", id: "boton-fuego"}
-)
+]
 
-leopardo.ataques.push(
+const LEOPARDO_ATAQUES = [
     {nombre: "agua", id: "boton-agua"},
     {nombre: "agua", id: "boton-agua"},
     {nombre: "agua", id: "boton-agua"},
     {nombre: "fuego", id: "boton-fuego"},
     {nombre: "tierra", id: "boton-tierra"}
-)
+]
 
-zorro.ataques.push(
+const ZORRO_AATAQUES = [
     {nombre: "fuego", id: "boton-fuego"},
     {nombre: "fuego", id: "boton-fuego"},
     {nombre: "fuego", id: "boton-fuego"},
     {nombre: "agua", id: "boton-agua"},
     {nombre: "tierra", id: "boton-tierra"}
-)
+]
 
-
-gorilaEnemigo.ataques.push(
-    {nombre: "tierra", id: "boton-tierra"},
-    {nombre: "tierra", id: "boton-tierra"},
-    {nombre: "tierra", id: "boton-tierra"},
-    {nombre: "agua", id: "boton-agua"},
-    {nombre: "fuego", id: "boton-fuego"}
-)
-
-leopardoEnemigo.ataques.push(
-    {nombre: "agua", id: "boton-agua"},
-    {nombre: "agua", id: "boton-agua"},
-    {nombre: "agua", id: "boton-agua"},
-    {nombre: "fuego", id: "boton-fuego"},
-    {nombre: "tierra", id: "boton-tierra"}
-)
-
-zorroEnemigo.ataques.push(
-    {nombre: "fuego", id: "boton-fuego"},
-    {nombre: "fuego", id: "boton-fuego"},
-    {nombre: "fuego", id: "boton-fuego"},
-    {nombre: "agua", id: "boton-agua"},
-    {nombre: "tierra", id: "boton-tierra"}
-)
-
+gorila.ataques.push(...GORILA_ATAQUES)
+leopardo.ataques.push(...LEOPARDO_ATAQUES)
+zorro.ataques.push(...ZORRO_AATAQUES)
 
 mokepones.push(gorila, leopardo, zorro)
 
@@ -421,19 +397,21 @@ function pintarCanvas()
     )
 
     mascotaJugadorObjeto.pintarMokepon()
+    enviarPosicion(mascotaJugadorObjeto.x, mascotaJugadorObjeto.y)
+    
 
-    gorilaEnemigo.pintarMokepon()
-    leopardoEnemigo.pintarMokepon()
-    zorroEnemigo.pintarMokepon()
+    mokeponesEnemigos.forEach(function(enemigo) {
+        if(enemigo != undefined)
+        {
+            enemigo.pintarMokepon()      
+        }
+    })
 
-    if(mascotaJugadorObjeto.velocidadX !== 0 || mascotaJugadorObjeto.y !== 0)
-    {
-        enviarPosicion(mascotaJugadorObjeto.x, mascotaJugadorObjeto.y)
 
-        revisarColision(gorilaEnemigo)
-        revisarColision(leopardoEnemigo)
-        revisarColision(zorroEnemigo)
-    }   
+    // if(mascotaJugadorObjeto.velocidadX !== 0 || mascotaJugadorObjeto.y !== 0)
+    // {
+
+    // }   
 }
 
 function enviarPosicion(x,y)
@@ -455,6 +433,34 @@ function enviarPosicion(x,y)
                 res.json()
                     .then(function({enemigos}){
                         console.log(enemigos)
+
+                        if(enemigos != undefined)
+                        {
+                            mokeponesEnemigos = enemigos.map(function(enemigo) {
+                                if(enemigo.mokepon != undefined)
+                                {
+                                    let mokeponEnemigo = null
+                                    const mokeponNombre = enemigo.mokepon.nombre || ""
+
+                                    if(mokeponNombre === "Gorila")
+                                    {
+                                        mokeponEnemigo = new Mokepon("Gorila", "./assets/gorila.png", 5, './assets/gorila.png')
+                                    }
+                                    else if(mokeponNombre === "Leopardo")
+                                    {
+                                        mokeponEnemigo = new Mokepon("Leopardo", "./assets/leopardo.png", 5, "./assets/leopardo.png")
+                                    }
+                                    else if(mokeponNombre === "Zorro")
+                                    {
+                                        mokeponEnemigo = new Mokepon("Zorro", "./assets/zorro.png", 5, "./assets/zorro.png")
+                                    }
+
+                                    mokeponEnemigo.x = enemigo.x
+                                    mokeponEnemigo.y = enemigo.y
+                                    return mokeponEnemigo
+                                }
+                            })
+                        }
                     })
             }
         })
