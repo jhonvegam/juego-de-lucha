@@ -23,6 +23,7 @@ const sectionVerMapa = document.getElementById('ver-mapa')
 const mapa = document.getElementById('mapa')
 
 let jugadorId = null
+let enemigoId = null
 
 let inputGorila 
 let inputLeopardo 
@@ -56,14 +57,14 @@ let intervalo
 let mapaBackground = new Image()
 mapaBackground.src = './assets/mokemap.png'
 let alturaQueBuscamos 
-let anchoDelMapa = window.innerWidth - 20
+let anchoDelMapa = window.innerWidth - 200
 
-alturaQueBuscamos = anchoDelMapa*600/800
+alturaQueBuscamos = anchoDelMapa*600/1600
 
 mapa.width = anchoDelMapa
 mapa.height = alturaQueBuscamos
 
-const anchoMaximoDelMapa = 350
+const anchoMaximoDelMapa = 200
 
 if(anchoDelMapa > anchoMaximoDelMapa)
 {
@@ -271,30 +272,47 @@ function secuenciaAtaque()
     botones.forEach(boton =>{
         boton.addEventListener("click", (e) => {
 
-            let elemento = document.createElement('p')
-            elemento.textContent = e.target.textContent.trim()
-            ataquesDelJugador.appendChild(elemento)
+            // let elemento = document.createElement('p')
+            // elemento.textContent = e.target.textContent.trim()
+            // ataquesDelJugador.appendChild(elemento)
             ataqueJugadorSec = e.target.textContent.trim()
-            
-            ataqueAleatorioEnemigo()
+
+            console.log(ataqueJugadorSec)
+
+            enviarAtaque()
         })
     })
 }
 
-function ataqueAleatorioEnemigo()
+function enviarAtaque()
 {
-    let ataqueAleatorio = aleatorio(0, ataquesMokeponEnemigo.length-1)
+    fetch(`http://localhost:8080/mokepon/${jugadorId}/ataque`, {
+        method: "post",
+        headers:{
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            ataque: ataqueJugadorSec
+        })
+    })
 
-    let elemento = document.createElement("p")
-    let ataqueAct = ataquesMokeponEnemigo[ataqueAleatorio].nombre
-    elemento.textContent = ataqueAct
-    ataqueEnemigo = ataqueAct
-
-    ataquesDelEnemigo.appendChild(elemento)
-
-    resultado()
+    intervalo = setInterval(obtenerAtaque, 10000)
 }
 
+function obtenerAtaque()
+{
+    fetch(`http://localhost:8080/mokepon/${enemigoId}/ataque`)
+        .then(function(res){
+            if(res.ok)
+            {
+                res.json()
+                    .then(function({ataque}){
+                        ataqueEnemigo = ataque
+                        resultado()
+                    })
+            }
+        })
+}
 
 function crearMensaje(mensaje)
 {
@@ -305,8 +323,8 @@ function crearMensaje(mensaje)
     nuevoAtaqueDelJugador.innerHTML = ataqueJugadorSec
     nuevoAtaqueDelEnemigo.innerHTML = ataqueEnemigo
 
-    // ataquesDelJugador.appendChild(nuevoAtaqueDelJugador)
-    // ataquesDelEnemigo.appendChild(nuevoAtaqueDelEnemigo)
+    ataquesDelJugador.appendChild(nuevoAtaqueDelJugador)
+    ataquesDelEnemigo.appendChild(nuevoAtaqueDelEnemigo)
 }
 
 function crearMensajeFinal(resultadoFinal)
@@ -326,6 +344,10 @@ function crearMensajeFinal(resultadoFinal)
 
 function resultado()
 {
+    clearInterval(intervalo)
+
+    console.log(ataqueJugadorSec + " -- " + ataqueEnemigo)
+
     if(ataqueJugadorSec == ataqueEnemigo)
     {
         crearMensaje("EMPATE")
@@ -430,15 +452,15 @@ function enviarPosicion(x,y)
 
                             if(mokeponNombre === "Gorila")
                             {
-                                mokeponEnemigo = new Mokepon("Gorila", "./assets/gorila.png", 5, './assets/gorila.png')
+                                mokeponEnemigo = new Mokepon("Gorila", "./assets/gorila.png", 5, './assets/gorila.png', enemigo.id)
                             }
                             else if(mokeponNombre === "Leopardo")
                             {
-                                mokeponEnemigo = new Mokepon("Leopardo", "./assets/leopardo.png", 5, "./assets/leopardo.png")
+                                mokeponEnemigo = new Mokepon("Leopardo", "./assets/leopardo.png", 5, "./assets/leopardo.png", enemigo.id)
                             }
                             else if(mokeponNombre === "Zorro")
                             {
-                                mokeponEnemigo = new Mokepon("Zorro", "./assets/zorro.png", 5, "./assets/zorro.png")
+                                mokeponEnemigo = new Mokepon("Zorro", "./assets/zorro.png", 5, "./assets/zorro.png", enemigo.id)
                             }
 
                             mokeponEnemigo.x = enemigo.x
@@ -543,6 +565,7 @@ function revisarColision(enemigo)
     detenerMovimiento()
     clearInterval(intervalo)
     console.log('Se detectó una colisión')
+    enemigoId = enemigo.id
     seccionAtaque.style.display = 'flex'
     sectionVerMapa.style.display = 'none'
     seleccionarMascotaEnemigo(enemigo)
