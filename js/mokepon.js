@@ -398,20 +398,11 @@ function pintarCanvas()
 
     mascotaJugadorObjeto.pintarMokepon()
     enviarPosicion(mascotaJugadorObjeto.x, mascotaJugadorObjeto.y)
-    
 
-    mokeponesEnemigos.forEach(function(enemigo) {
-        if(enemigo != undefined)
-        {
-            enemigo.pintarMokepon()      
-        }
+    mokeponesEnemigos.forEach(function(mokepona) {
+        mokepona.pintarMokepon()   
+        revisarColision(mokepona)   
     })
-
-
-    // if(mascotaJugadorObjeto.velocidadX !== 0 || mascotaJugadorObjeto.y !== 0)
-    // {
-
-    // }   
 }
 
 function enviarPosicion(x,y)
@@ -433,34 +424,27 @@ function enviarPosicion(x,y)
                 res.json()
                     .then(function({enemigos}){
                         console.log(enemigos)
+                        mokeponesEnemigos = enemigos.map(function(enemigo) {
+                            let mokeponEnemigo = null
+                            const mokeponNombre = enemigo.mokepon.nombre || ""
 
-                        if(enemigos != undefined)
-                        {
-                            mokeponesEnemigos = enemigos.map(function(enemigo) {
-                                if(enemigo.mokepon != undefined)
-                                {
-                                    let mokeponEnemigo = null
-                                    const mokeponNombre = enemigo.mokepon.nombre || ""
+                            if(mokeponNombre === "Gorila")
+                            {
+                                mokeponEnemigo = new Mokepon("Gorila", "./assets/gorila.png", 5, './assets/gorila.png')
+                            }
+                            else if(mokeponNombre === "Leopardo")
+                            {
+                                mokeponEnemigo = new Mokepon("Leopardo", "./assets/leopardo.png", 5, "./assets/leopardo.png")
+                            }
+                            else if(mokeponNombre === "Zorro")
+                            {
+                                mokeponEnemigo = new Mokepon("Zorro", "./assets/zorro.png", 5, "./assets/zorro.png")
+                            }
 
-                                    if(mokeponNombre === "Gorila")
-                                    {
-                                        mokeponEnemigo = new Mokepon("Gorila", "./assets/gorila.png", 5, './assets/gorila.png')
-                                    }
-                                    else if(mokeponNombre === "Leopardo")
-                                    {
-                                        mokeponEnemigo = new Mokepon("Leopardo", "./assets/leopardo.png", 5, "./assets/leopardo.png")
-                                    }
-                                    else if(mokeponNombre === "Zorro")
-                                    {
-                                        mokeponEnemigo = new Mokepon("Zorro", "./assets/zorro.png", 5, "./assets/zorro.png")
-                                    }
-
-                                    mokeponEnemigo.x = enemigo.x
-                                    mokeponEnemigo.y = enemigo.y
-                                    return mokeponEnemigo
-                                }
-                            })
-                        }
+                            mokeponEnemigo.x = enemigo.x
+                            mokeponEnemigo.y = enemigo.y
+                            return mokeponEnemigo
+                        })
                     })
             }
         })
@@ -553,7 +537,7 @@ function revisarColision(enemigo)
 
     if(abajoMascota < arribaEnemigo || arribaMascota > abajoEnemigo || derechaMascota < izquierdaEnemigo || izquierdaMascota > derechaEnemigo)
     {
-      return  
+      return;  
     }
 
     detenerMovimiento()
