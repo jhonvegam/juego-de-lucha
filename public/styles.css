@@ -1,0 +1,164 @@
+/* 
+# cuando se referencia el elemento por id
+. cuando se referencia el elemento por class
+*/
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&family=UnifrakturCook:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Pacifico&family=UnifrakturCook:wght@700&display=swap');
+
+body{
+    /* font-family: 'UnifrakturCook', cursive; */
+    /* background-image: url("./assets/fondo.png"); */
+    background-color: #280274;
+    font-family: 'Alfa Slab One';
+    /* font-family: 'Pacifico', cursive;
+    font-family: 'UnifrakturCook', cursive;
+    font-family: 'Alfa Slab One', serif;
+    font-family: 'Pacifico', cursive;
+    font-family: 'UnifrakturCook', cursive;; */
+}
+
+#seleccionar-mascota{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.titulo{
+    color: white;
+    font-size: 60px;
+}
+
+.subtitulo{
+    color: white;
+    font-size: 24;
+}
+
+
+.tarjetas, .tarjetas-ataques{
+    display: flex;
+    gap: 10px;
+}
+
+.tarjeta-de-mokepon{
+    width: 230px;
+    height: 230px;
+    background: #3652AD;
+    padding: 10px;
+    box-sizing: border-box;
+    margin: 10px;
+    font-family: Georgia;
+    border-radius: 20px;
+    font-family: 'UnifrakturCook', cursive;
+    display: flex;
+    color: white;
+    align-items: center;
+    justify-content: space-evenly;
+    font-size: 24;
+}
+
+.tarjeta-de-mokepon img {
+    width: 120px;
+}
+
+input {
+    display: none;
+}
+
+input:checked + label{
+    background-color: #FE7A36;
+}
+
+#boton-mascota{
+    width: 230px;
+    height: 50px;
+    border-radius: 20px;
+    font-family: 'Alfa Slab One';
+    color: white;
+    background-color: #FE7A36;
+    border: 0px
+}
+
+#seleccionar-ataque{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+
+.boton-de-ataque{
+    background-color: #3652AD;
+    border: 0px;
+    width: 130px;
+    height: 50px;
+    border-radius: 20px;
+    font-family: 'UnifrakturCook', cursive;
+    color: white;
+}
+
+.boton-de-ataque:hover {
+    background-color: #FE7A36;
+}
+
+#mensajes{
+    width: 250px;
+    background: #FE7A36;
+    height: 80px;
+    border-radius: 20px;
+    display: flex;
+    margin-top: 20px;
+    flex-direction: column;
+    align-items: center;
+    padding: 2px;
+}
+
+#boton-reiniciar{
+    border: none;
+    background-color: #FAEF5D;
+    color: white;
+    font-family: 'Alfa Slab One';
+    border-radius: 4px;
+}
+
+.ataques{
+    display: grid;
+    grid-template-columns: 100px 100px;
+    text-align: center;
+    font-family: 'Alfa Slab One';
+    color: white
+}
+
+#ver-mapa{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#ver-mapa button{
+    width: 80px;
+    height: 40px;
+    border-radius: 20px;
+    background: transparent;
+    border: 2px solid white;
+    color: white;
+    font-family: 'Alfa Slab One';
+    margin: 10px 0;
+
+}
+
+@media(max-width: 580px){
+    .tarjetas, .tarjetas-ataques{
+        flex-direction: column;
+    }
+    .tarjeta-de-mokepon{
+        flex-direction: column;
+    }  
+}
+
+@media(max-width: 300px){
+    #ver-mapa div{
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+    }
+}
